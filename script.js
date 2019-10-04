@@ -1,98 +1,110 @@
 $(function() {
     
-    const retroApp = {};
+    const karaoke = {};
 
-    retroApp.apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWQzOGFkNzJlZjk1NjQwNDZmYzRhNzFlIn0sImlhdCI6MTU2Mzk5NTUwNywiZXhwIjoxNTk1NTMxNTA3fQ.76ZKK_sn1sUCtRdD9FlTlPaQmtMYzIpKFJqb15XZshQ";
+    karaoke.apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWQzOGFkNzJlZjk1NjQwNDZmYzRhNzFlIn0sImlhdCI6MTU2Mzk5NTUwNywiZXhwIjoxNTk1NTMxNTA3fQ.76ZKK_sn1sUCtRdD9FlTlPaQmtMYzIpKFJqb15XZshQ";
 
-    retroApp.baseUrl = 'https://retroapi.hackeryou.com/api'
+    karaoke.baseUrl = 'https://retroapi.hackeryou.com/api'
 
-    retroApp.getRandomYear = (data) => {
+    karaoke.lyricsSection = $('.lyrics');
+    karaoke.titleSection = $('.songTitle');
+    karaoke.artistSection = $('.artist');
+
+    karaoke.getRandomYear = (data) => {
         // The top range of the random number is decided by the number of years returned
         return Math.floor(Math.random() * (data.length - 1));
     }
 
-    retroApp.getRandomNum = () => {
+    karaoke.getRandomNum = () => {
+        // Just need a number between 0 and 5
         return Math.floor(Math.random() * 5);
     }
 
-    retroApp.getYears = () => {
+    /*
+        Make the call to the retroAPI /years endpoint to grab
+    */
+    karaoke.getYears = () => {
         const yearsResponse = $.ajax({
-            url: `${retroApp.baseUrl}/years`,
+            url: `${karaoke.baseUrl}/years`,
             method: 'GET',
             dataType: 'json',
             data: {
-                apiKey: retroApp.apiKey
+                apiKey: karaoke.apiKey
             }
         });
         return yearsResponse;
     }
 
-    retroApp.splitArtistFeatured = (artist) => {
+    /*
+        Need specific formatting, or else the lyrics API doesn't appreciate us
+    */
+    karaoke.splitArtistFeatured = (artist) => {
         const soloArtist = artist.split("feat.");
         const formattedSoloArtist = soloArtist[0].replace('and', '&')
-        const formattedSoloArtistNoSpaces = retroApp.removeSpaces(formattedSoloArtist);
+        const formattedSoloArtistNoSpaces = karaoke.removeSpaces(formattedSoloArtist);
         return formattedSoloArtistNoSpaces;
     }
 
-    retroApp.removeSpaces = (artist) => {
+
+    karaoke.removeSpaces = (artist) => {
         const artistNoSpace = artist.trim();
         return artistNoSpace;
     }
 
-    retroApp.getLyrics = (chosenSong) => {
+    karaoke.getLyrics = (title, artist) => {
         const lyricsResponse = $.ajax({
-            url: `https://api.lyrics.ovh/v1/${chosenSong.artist}/${chosenSong.title}`,
+            url: `https://api.lyrics.ovh/v1/${artist}/${title}`,
             method: 'GET',
             dataType: 'json'
         }).then(function(data) {
             console.log(data.lyrics);
-            $('.lyrics').append(data.lyrics);
+            karaoke.lyricsSection.append(data.lyrics);
         })
         return lyricsResponse;
     }
 
-    retroApp.setSong = () => {
-        const chosenSong = {};
-        const allYears = retroApp.getYears();
+    karaoke.setSong = () => {
+        const allYears = karaoke.getYears();
 
         $.when(allYears).done(function(data) {
-            const randomYear = retroApp.getRandomYear(data);
-            const randomSong = retroApp.getRandomNum();
+            const randomYear = karaoke.getRandomYear(data);
+            const randomSong = karaoke.getRandomNum();
 
             const formattedTitle = data[randomYear].songs[randomSong].title;
-            const formattedArist =  retroApp.splitArtistFeatured(data[randomYear].songs[randomSong].artist);
-            $('.songTitle').append(formattedTitle);
-            $('.artist').append(formattedArist);
-            chosenSong.title = formattedTitle;
-            chosenSong.artist = formattedArist;
-            return retroApp.getLyrics(chosenSong);
+            const formattedArist =  karaoke.splitArtistFeatured(data[randomYear].songs[randomSong].artist);
+            karaoke.titleSection.append(formattedTitle);
+            karaoke.artistSection.append(formattedArist);
+            const title = formattedTitle;
+            const artist = formattedArist;
+            return karaoke.getLyrics(title, artist);
         });
     }
 
-    retroApp.refreshSong = () => {
+    karaoke.refreshSong = () => {
         // Reset song title
-        $('.songTitle').empty();
+        karaoke.titleSection.empty();
         // Reset artist
-        $('.artist').empty();
+        karaoke.artistSection.empty();
         // Reset lyrics data
-        $('.lyrics').empty();
+        karaoke.lyricsSection.empty();
 
-        retroApp.setSong();
+        karaoke.setSong();
     }
 
-    retroApp.init = () => {
+    karaoke.init = () => {
         let curtainOpens = 0;
-        retroApp.setSong();
+        karaoke.setSong();
 
+        // This is just to keep track of when we're clicking on the full page.
         $('.curtain__checkbox').on('click', function() {
             if (curtainOpens % 2 === 0) {
-                retroApp.refreshSong();
+                karaoke.refreshSong();
             }
             curtainOpens = curtainOpens + 1;
         })
 
     }
 
-    retroApp.init();
+    karaoke.init();
 
 });
