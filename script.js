@@ -11,7 +11,7 @@ $(function() {
         return Math.floor(Math.random() * (data.length - 1));
     }
 
-    retroApp.getRandomSong = () => {
+    retroApp.getRandomNum = () => {
         return Math.floor(Math.random() * 5);
     }
 
@@ -45,31 +45,52 @@ $(function() {
             method: 'GET',
             dataType: 'json'
         }).then(function(data) {
-            console.log(data);
-            $('.results').append(data.lyrics);
+            console.log(data.lyrics);
+            $('.lyrics').append(data.lyrics);
         })
         return lyricsResponse;
     }
 
-    retroApp.init = () => {
+    retroApp.setSong = () => {
         const chosenSong = {};
         const allYears = retroApp.getYears();
+
         $.when(allYears).done(function(data) {
-            console.debug(data);
             const randomYear = retroApp.getRandomYear(data);
-            const randomSong = retroApp.getRandomSong();
-            console.debug(randomYear);
-            console.debug(randomSong);
+            const randomSong = retroApp.getRandomNum();
+
             const formattedTitle = data[randomYear].songs[randomSong].title;
             const formattedArist =  retroApp.splitArtistFeatured(data[randomYear].songs[randomSong].artist);
-            console.debug(formattedTitle);
-            console.debug(formattedArist);
             $('.songTitle').append(formattedTitle);
             $('.artist').append(formattedArist);
             chosenSong.title = formattedTitle;
             chosenSong.artist = formattedArist;
             return retroApp.getLyrics(chosenSong);
         });
+    }
+
+    retroApp.refreshSong = () => {
+        // Reset song title
+        $('.songTitle').empty();
+        // Reset artist
+        $('.artist').empty();
+        // Reset lyrics data
+        $('.lyrics').empty();
+
+        retroApp.setSong();
+    }
+
+    retroApp.init = () => {
+        let curtainOpens = 0;
+        retroApp.setSong();
+
+        $('.curtain__checkbox').on('click', function() {
+            if (curtainOpens % 2 === 0) {
+                retroApp.refreshSong();
+            }
+            curtainOpens = curtainOpens + 1;
+        })
+
     }
 
     retroApp.init();

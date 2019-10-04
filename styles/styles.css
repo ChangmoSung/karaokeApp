@@ -20,6 +20,13 @@ img {
     display: block;
 }
 
+.randomize {
+    position: absolute;
+    z-index: 150;
+    top: 0;
+    right: 0;
+}
+
 /* curtain */
 .curtain {
     margin: 0 auto;
@@ -256,45 +263,12 @@ input[type=checkbox]:checked ~ .curtain__content .resultsWrapper {
 
 
 /* p tag with lyrics */
-.results {
+.lyrics {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     white-space: pre-wrap;
-    /* position: absolute;
-    -moz-transform:translateY(-100%);
-    -webkit-transform:translateY(-100%);
-    transform:translateY(-100%); */
-    /* Apply animation to this element */
-    /* -moz-animation: example3 15s linear infinite;
-    -webkit-animation: example3 15s linear infinite;
-    animation: example3 15s linear infinite; */
 }
-
-/* IN CASE WE ACTUALLY WANT THE TEXT TO SCROLL */
-
-/* Move it (define the animation) */
-/* @-moz-keyframes example3 {
-    0%   { -moz-transform: translateY(-100%); }
-    100% { -moz-transform: translateY(100%); }
-   }
-   @-webkit-keyframes example3 {
-    0%   { -webkit-transform: translateY(-100%); }
-    100% { -webkit-transform: translateY(100%); }
-   }
-   @keyframes example3 {
-    0%   {  */
-    /* -moz-transform: translateY(-100%);
-    -webkit-transform: translateY(-100%);
-    transform: translateY(-100%);
-    }
-    100% {
-    -moz-transform: translateY(100%);
-    -webkit-transform: translateY(100%);
-    transform: translateY(100%);
-    }
-} */
-
 
 @media (max-width: 620px) {
     .curtain__wrapper input[type=checkbox]:checked ~ div.curtain__panel--left,
