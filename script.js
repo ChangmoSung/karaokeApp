@@ -9,21 +9,25 @@ $(function() {
     karaoke.lyricsSection = $('.lyrics');
     karaoke.titleSection = $('.songTitle');
     karaoke.artistSection = $('.artist');
+    karaoke.curtains = $('.curtain__checkbox');
 
+    /*
+        The array of objects contains one object per year, so use the array to grab a random year object based on the overall length of the array.
+    */
     karaoke.getRandomYear = (data) => {
-        // The top range of the random number is decided by the number of years returned
+        // The top range of the random number is decided by the number of years returned.
         return Math.floor(Math.random() * (data.length - 1));
     }
 
     karaoke.getRandomNum = () => {
-        // Just need a number between 0 and 5
+        // Just need a number between 0 and 5.
         return Math.floor(Math.random() * 5);
     }
 
     /*
-        Make the call to the retroAPI /years endpoint to grab
+        Make the call to the retroAPI /years endpoint to grab.
     */
-    karaoke.getYears = () => {
+    karaoke.getRetroDetails = () => {
         const yearsResponse = $.ajax({
             url: `${karaoke.baseUrl}/years`,
             method: 'GET',
@@ -37,6 +41,9 @@ $(function() {
 
     /*
         Need specific formatting, or else the lyrics API doesn't appreciate us
+        Some stipulations:
+        1. Doesn't work if the keyword 'feat' or 'featuring' is used.
+        2. Replace the word 'and' with the '&' symbol.
     */
     karaoke.splitArtistFeatured = (artist) => {
         const soloArtist = artist.split("feat.");
@@ -47,26 +54,34 @@ $(function() {
 
 
     karaoke.removeSpaces = (artist) => {
+        // Trim method eliminates leading and trailing spaces.
         const artistNoSpace = artist.trim();
         return artistNoSpace;
     }
 
+    /*
+        This will make the call to the lyrics API to get the desired song lyrics.
+    */
     karaoke.getLyrics = (title, artist) => {
-        const lyricsResponse = $.ajax({
+        // Make call to lyrics ovh API and pass in the artist and song desired.
+        $.ajax({
             url: `https://api.lyrics.ovh/v1/${artist}/${title}`,
             method: 'GET',
             dataType: 'json'
         }).then(function(data) {
-            console.log(data.lyrics);
+            // Append the lyrics to the appropriate section on the page.
             karaoke.lyricsSection.append(data.lyrics);
         })
-        return lyricsResponse;
     }
 
+    /*
+        Add all of the necessary song information to the page behind the curtains.
+    */
     karaoke.setSong = () => {
-        const allYears = karaoke.getYears();
+        const allRetroDetails = karaoke.getRetroDetails();
 
-        $.when(allYears).done(function(data) {
+        // Provides a way to execute callback functions based on zero or more thenable objects.
+        $.when(allRetroDetails).done(function(data) {
             const randomYear = karaoke.getRandomYear(data);
             const randomSong = karaoke.getRandomNum();
 
@@ -76,16 +91,19 @@ $(function() {
             karaoke.artistSection.append(formattedArist);
             const title = formattedTitle;
             const artist = formattedArist;
-            return karaoke.getLyrics(title, artist);
+            karaoke.getLyrics(title, artist);
         });
     }
 
+    /*
+        Clear out the song related information, and fetch another song to display.
+    */
     karaoke.refreshSong = () => {
-        // Reset song title
+        // Reset song title.
         karaoke.titleSection.empty();
-        // Reset artist
+        // Reset artist.
         karaoke.artistSection.empty();
-        // Reset lyrics data
+        // Reset lyrics data.
         karaoke.lyricsSection.empty();
 
         karaoke.setSong();
@@ -93,10 +111,11 @@ $(function() {
 
     karaoke.init = () => {
         let curtainOpens = 0;
+        // This will set an initial song to display behind the curtain.
         karaoke.setSong();
 
         // This is just to keep track of when we're clicking on the full page.
-        $('.curtain__checkbox').on('click', function() {
+        karaoke.curtains.on('click', function() {
             if (curtainOpens % 2 === 0) {
                 karaoke.refreshSong();
             }
