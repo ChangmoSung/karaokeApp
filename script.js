@@ -86,12 +86,10 @@ $(function() {
             const randomSong = karaoke.getRandomNum();
 
             const formattedTitle = data[randomYear].songs[randomSong].title;
-            const formattedArist =  karaoke.splitArtistFeatured(data[randomYear].songs[randomSong].artist);
+            const formattedArtist =  karaoke.splitArtistFeatured(data[randomYear].songs[randomSong].artist);
             karaoke.titleSection.append(formattedTitle);
-            karaoke.artistSection.append(formattedArist);
-            const title = formattedTitle;
-            const artist = formattedArist;
-            karaoke.getLyrics(title, artist);
+            karaoke.artistSection.append(formattedArtist);
+            karaoke.getLyrics(formattedTitle, formattedArtist);
         });
     }
 
