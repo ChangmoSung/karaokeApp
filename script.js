@@ -4,7 +4,8 @@ $(function() {
 
     karaoke.apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWQzOGFkNzJlZjk1NjQwNDZmYzRhNzFlIn0sImlhdCI6MTU2Mzk5NTUwNywiZXhwIjoxNTk1NTMxNTA3fQ.76ZKK_sn1sUCtRdD9FlTlPaQmtMYzIpKFJqb15XZshQ";
 
-    karaoke.baseUrl = 'https://retroapi.hackeryou.com/api'
+    karaoke.retroBaseUrl = 'https://retroapi.hackeryou.com/api';
+    karaoke.lyricsBaseUrl = 'https://api.lyrics.ovh/v1';
 
     karaoke.lyricsSection = $('.lyrics');
     karaoke.titleSection = $('.songTitle');
@@ -29,7 +30,7 @@ $(function() {
     */
     karaoke.getRetroDetails = () => {
         const yearsResponse = $.ajax({
-            url: `${karaoke.baseUrl}/years`,
+            url: `${karaoke.retroBaseUrl}/years`,
             method: 'GET',
             dataType: 'json',
             data: {
@@ -55,8 +56,7 @@ $(function() {
 
     karaoke.removeSpaces = (artist) => {
         // Trim method eliminates leading and trailing spaces.
-        const artistNoSpace = artist.trim();
-        return artistNoSpace;
+        return artist.trim();
     }
 
     /*
@@ -65,7 +65,7 @@ $(function() {
     karaoke.getLyrics = (title, artist) => {
         // Make call to lyrics ovh API and pass in the artist and song desired.
         $.ajax({
-            url: `https://api.lyrics.ovh/v1/${artist}/${title}`,
+            url: `${karaoke.lyricsBaseUrl}/${artist}/${title}`,
             method: 'GET',
             dataType: 'json'
         }).then(function(data) {
