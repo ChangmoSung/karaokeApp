@@ -126,17 +126,16 @@ The response from the API will now be stored inside of the `data` parameter insi
 }
 ```
 
-We are particularly in the `songs` array, which will have 5 songs representing the top 5 songs of the respective year:
+We are particularly interested in the `songs` array, which will have 5 songs representing the top 5 songs of the respective year:
 
-```json
+```javascript
 [
     {
         _id: 1234567,
         artist: 'Blondie',
         title: 'Call Me',
         year: 12345678
-    },
-    {},{} ...
+    }
 ]
 ```
 
