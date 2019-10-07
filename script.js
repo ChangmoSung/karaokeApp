@@ -17,7 +17,7 @@ $(function() {
     */
     karaoke.getRandomYear = (data) => {
         // The top range of the random number is decided by the number of years returned.
-        return Math.floor(Math.random() * (data.length - 1));
+        return Math.floor(Math.random() * data.length);
     }
 
     karaoke.getRandomNum = () => {

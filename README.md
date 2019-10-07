@@ -148,7 +148,7 @@ karaoke.getRandomYear = (data) => {
     // The top range of the random number is decided by the number of years returned.
 
     // As this is being used for array indexing (which starts at 0), we need to subtract 1 from the overall length.
-    return Math.floor(Math.random() * (data.length - 1));
+    return Math.floor(Math.random() * data.length);
 }
 
 karaoke.getRandomNum = () => {
