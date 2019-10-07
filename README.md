@@ -18,7 +18,7 @@ We're going to create a property to hold the API key. This will be stored in our
 
 ```javascript
 const karaoke = {};
-karaoke.apiKey = `YOUR_KEY_HERE`;
+karaoke.retroApiKey = `YOUR_KEY_HERE`;
 ```
 
 We are going to create an `init` function that will get things started. We'll call this within the document ready, and fill in the code to run on `init` later.
@@ -70,7 +70,7 @@ We should now have all of the information that we need in order to make the call
         method: 'GET',
         dataType: 'json',
         data: {
-            apiKey: karaoke.apiKey
+            apiKey: karaoke.retroApiKey
         }
     });
     return yearsResponse;

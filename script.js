@@ -2,7 +2,7 @@ $(function() {
     
     const karaoke = {};
 
-    karaoke.apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWQzOGFkNzJlZjk1NjQwNDZmYzRhNzFlIn0sImlhdCI6MTU2Mzk5NTUwNywiZXhwIjoxNTk1NTMxNTA3fQ.76ZKK_sn1sUCtRdD9FlTlPaQmtMYzIpKFJqb15XZshQ";
+    karaoke.retroApiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWQzOGFkNzJlZjk1NjQwNDZmYzRhNzFlIn0sImlhdCI6MTU2Mzk5NTUwNywiZXhwIjoxNTk1NTMxNTA3fQ.76ZKK_sn1sUCtRdD9FlTlPaQmtMYzIpKFJqb15XZshQ";
 
     karaoke.retroBaseUrl = 'https://retroapi.hackeryou.com/api';
     karaoke.lyricsBaseUrl = 'https://api.lyrics.ovh/v1';
@@ -34,7 +34,7 @@ $(function() {
             method: 'GET',
             dataType: 'json',
             data: {
-                apiKey: karaoke.apiKey
+                apiKey: karaoke.retroApiKey
             }
         });
         return yearsResponse;
